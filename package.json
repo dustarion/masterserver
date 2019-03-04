@@ -1,0 +1,22 @@
+{
+  "name": "masterserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Master-App/masterserver.git"
+  },
+  "author": "Qin Guan",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/Master-App/masterserver/issues"
+  },
+  "homepage": "https://github.com/Master-App/masterserver#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
