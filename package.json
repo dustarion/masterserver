@@ -17,8 +17,12 @@
   },
   "homepage": "https://github.com/Master-App/masterserver#readme",
   "dependencies": {
+    "atob": "^2.1.2",
     "body-parser": "^1.18.3",
+    "btoa": "^1.2.1",
     "cors": "^2.8.5",
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "firebase": "^5.8.6",
+    "validator": "^10.11.0"
   }
 }
