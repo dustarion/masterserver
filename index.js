@@ -15,6 +15,7 @@ var config = {
   messagingSenderId: "1086655103908"
 };
 firebase.initializeApp(config);
+var provider = new firebase.auth.GoogleAuthProvider();
 
 app.use(cors());
 app.use(bodyParser());
@@ -40,6 +41,18 @@ app.post("/llcllogin", (req, res) => {
     .signInWithEmailAndPassword(email, pass)
     .then(x => {
       res.send(x).end();
+    })
+    .catch(error => {
+      res.send({ error: true, ...error }).end();
+    });
+});
+
+app.get("/glglogin", (req, res) => {
+  firebase
+    .auth()
+    .signInWithPopup(provider)
+    .then(response => {
+      res.send(response).end();
     })
     .catch(error => {
       res.send({ error: true, ...error }).end();
