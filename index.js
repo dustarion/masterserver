@@ -5,6 +5,12 @@ const bodyParser = require("body-parser");
 const firebase = require("firebase");
 const atob = require("atob");
 const validator = require("validator");
+const jwt = require("jsonwebtoken");
+
+const secret = "nVonHhApJpMgRyBrC6Vg";
+
+app.use(cors());
+app.use(bodyParser());
 
 var config = {
   apiKey: "AIzaSyAcYSb9fvk2vUiRhavsKlrcrpnyFKtzXTQ",
@@ -15,48 +21,34 @@ var config = {
   messagingSenderId: "1086655103908"
 };
 firebase.initializeApp(config);
-var provider = new firebase.auth.GoogleAuthProvider();
 
-app.use(cors());
-app.use(bodyParser());
+const db = firebase.firestore();
 
-app.post("/llcllogin", (req, res) => {
-  const email = atob(req.body.e);
-  const pass = atob(req.body.p);
-  if (!validator.isEmail(email)) {
-    res.send({ error: true, message: "Email is not valid." }).end();
-    return;
+app.post("/localSignIn", (req, res) => {
+  if (!req.body.uid) {
+    return res.send({ error: true, msg: "Missing fields" }).end();
   }
-  if (!validator.isLength(pass, { min: 6, max: undefined })) {
-    res
-      .send({
-        error: true,
-        message: "Password has to be 6 characters or more"
-      })
-      .end();
-    return;
+  if (!req.body.e) {
+    return res.send({ error: true, msg: "Missing fields" }).end();
   }
-  firebase
-    .auth()
-    .signInWithEmailAndPassword(email, pass)
-    .then(x => {
-      res.send(x).end();
-    })
-    .catch(error => {
-      res.send({ error: true, ...error }).end();
+  const uid = req.body.uid;
+  const email = req.body.email;
+  const ref = db.collection("users").doc(uid);
+  ref.get().then(doc => {
+    if (!doc.exists) {
+      return res.send({ error: true, msg: "User does not exist" });
+    }
+    const user = {
+      uid,
+      email
+    };
+    jwt.sign(user, secret, (err, token) => {
+      if (err) {
+        return res.send({ error: true, msg: "a server error occurred" });
+      }
+      res.send(token).end();
     });
-});
-
-app.get("/glglogin", (req, res) => {
-  firebase
-    .auth()
-    .signInWithPopup(provider)
-    .then(response => {
-      res.send(response).end();
-    })
-    .catch(error => {
-      res.send({ error: true, ...error }).end();
-    });
+  });
 });
 
 app.listen(8080);
