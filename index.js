@@ -104,29 +104,42 @@ app.post("/redirectSignUp", (req, res) => {
 });
 
 app.post("/getUserSets", (req, res) => {
-  // Check if token is missing
   if (!req.body.token) {
     return res.send({ error: true, msg: "Missing Data" }).end();
   }
-
   const token = req.body.token;
-  
-  // Verify Token
   jwt.verify(token, secret, (err, content) => {
     if (err) {
-      return res.send({ error: true, msg: "Verification Failed"}).end();
+      return res.send({ error: true, msg: "Verification Failed" }).end();
     }
-
     const uid = content.uid;
-
-    console.log(content.uid)
-  })
-
-  // Verify Token
-  // var decoded => jwt.verify(token);
-  // // var decoded = jwt.decode(token);
-  // console.log(decoded);
-  // res.end("test");
+    const ref = db.collection("users").doc(uid);
+    const sRef = db.collection("sets");
+    ref.get().then(doc => {
+      if (!doc.exists) {
+        return res
+          .send({ error: true, msg: "Please try logging in again" })
+          .end();
+      }
+      var sets = [];
+      doc.data().sets.forEach(id => {
+        sRef
+          .doc(id)
+          .get()
+          .then(sDoc => {
+            if (!sDoc.exists) {
+              return res
+                .send({ error: true, msg: "a server error occurred" })
+                .end();
+            }
+            sets.push(sDoc.data());
+            if (sets.length == doc.data().sets.length) {
+              res.send(sets).end();
+            }
+          });
+      });
+    });
+  });
 });
 
 app.listen(8080);
