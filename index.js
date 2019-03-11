@@ -20,6 +20,7 @@ var config = {
   storageBucket: "master-eb220.appspot.com",
   messagingSenderId: "1086655103908"
 };
+
 firebase.initializeApp(config);
 
 const db = firebase.firestore();
@@ -100,6 +101,32 @@ app.post("/redirectSignUp", (req, res) => {
       res.send({ token, pfp: doc.data().pfp }).end();
     });
   });
+});
+
+app.post("/getUserSets", (req, res) => {
+  // Check if token is missing
+  if (!req.body.token) {
+    return res.send({ error: true, msg: "Missing Data" }).end();
+  }
+
+  const token = req.body.token;
+  
+  // Verify Token
+  jwt.verify(token, secret, (err, content) => {
+    if (err) {
+      return res.send({ error: true, msg: "Verification Failed"}).end();
+    }
+
+    const uid = content.uid;
+
+    console.log(content.uid)
+  })
+
+  // Verify Token
+  // var decoded => jwt.verify(token);
+  // // var decoded = jwt.decode(token);
+  // console.log(decoded);
+  // res.end("test");
 });
 
 app.listen(8080);
