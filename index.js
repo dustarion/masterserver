@@ -122,6 +122,9 @@ app.post("/getUserSets", (req, res) => {
           .end();
       }
       var sets = [];
+      if (doc.data().sets.length == 0) {
+        return res.send(sets).end();
+      }
       doc.data().sets.forEach(id => {
         sRef
           .doc(id)
