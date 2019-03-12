@@ -145,4 +145,13 @@ app.post("/getUserSets", (req, res) => {
   });
 });
 
+app.post("/getUserFolders", (req, res) => {
+  if (!req.body.token) {
+    return res.send({ error: true, msg: "Missing Data"}).end();
+  }
+
+  
+});
+
+
 app.listen(8080);
