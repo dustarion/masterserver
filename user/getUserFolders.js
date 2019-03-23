@@ -4,13 +4,14 @@ const secret = "nVonHhApJpMgRyBrC6Vg";
 const jwt = require("jsonwebtoken");
 
 module.exports = (req, res) => {
+  console.log(req.body)
   if (!req.body.token) {
-    return res.send({ error: true, msg: "Missing Data" }).end();
+    return res.send({error: true, msg: "Missing Data"}).end();
   }
   const token = req.body.token;
   jwt.verify(token, secret, (err, content) => {
     if (err) {
-      return res.send({ error: true, msg: "Verification Failed" }).end();
+      return res.send({error: true, msg: "Verification Failed"}).end();
     }
     const uid = content.uid;
     const ref = db.collection("users").doc(uid);
@@ -19,7 +20,7 @@ module.exports = (req, res) => {
     ref.get().then(doc => {
       if (!doc.exists) {
         return res
-          .send({ error: true, msg: "Please try logging in again" })
+          .send({error: true, msg: "Please try logging in again"})
           .end();
       }
       var folders = [];
@@ -33,7 +34,7 @@ module.exports = (req, res) => {
           .then(fDoc => {
             if (!fDoc.exists) {
               return res
-                .send({ error: true, msg: "a server error occurred" })
+                .send({error: true, msg: "a server error occurred"})
                 .end();
             }
             sets.push(fDoc.data());
@@ -44,3 +45,4 @@ module.exports = (req, res) => {
       });
     });
   });
+}

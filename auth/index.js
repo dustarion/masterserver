@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-router.post("/localSignIn", require('./localSignIn'))
-router.post("/redirectSignUp", require("./redirectSignUp"))
+router.post("/login", require('./login'))
+router.post("/signup", require("./signup"))
 
 module.exports = router

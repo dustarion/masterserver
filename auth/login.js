@@ -4,6 +4,7 @@ const secret = "nVonHhApJpMgRyBrC6Vg";
 const jwt = require("jsonwebtoken");
 
 module.exports = (req, res) => {
+  console.log(req.body)
   if (!req.body.uid) {
     return res.send({ error: true, msg: "Missing fields" }).end();
   }
